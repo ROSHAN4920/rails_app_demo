@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: rails-build-pipeline
+  namespace: tekton-pipelines
+spec:
+  workspaces:
+    - name: shared-workspace
+  params:
+    - name: IMAGE
+      type: string
+  tasks:
+    - name: kaniko-build
+      taskRef:
+        name: kaniko
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      params:
+        - name: IMAGE
+          value: $(params.IMAGE)
+        - name: DOCKERFILE
+          value: ./Dockerfile
+        - name: CONTEXT
+          value: ./

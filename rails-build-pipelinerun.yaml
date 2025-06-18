@@ -1,0 +1,23 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: rails-build-run
+  namespace: tekton-pipelines
+spec:
+  pipelineRef:
+    name: rails-build-pipeline
+  taskRunTemplate:
+    serviceAccountName: default
+  params:
+    - name: IMAGE
+      value: docker.io/roshan4920/rails-app:latest
+  workspaces:
+    - name: shared-workspace
+      volumeClaimTemplate:
+        metadata:
+          name: shared-workspace-pvc
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
